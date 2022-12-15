@@ -293,7 +293,7 @@ io.on('connection', (socket) => {
       "token": "421d2c52165bb776513e47d65d3d4b57"
     }
     console.log(payload)
-    let res = await axios.post('https://sdv.alternatefutures.com/api/txt2video_concurrent', payload)
+    let res = await axios.post('https://sdv.alternatefutures.com/api/txt2video_concurrent_mocked', payload)
     let base64 = res.data.base64
     console.log('generate finished')
     if (base64) {
