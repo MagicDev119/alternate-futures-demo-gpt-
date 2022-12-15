@@ -19,6 +19,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.10.0",
     "mongoose": "^6.6.5",
+    "openai-node": "^1.0.5",
     "simple-thumbnail": "^1.6.5",
     "socket.io": "^4.5.3"
   }
