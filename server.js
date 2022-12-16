@@ -13,7 +13,7 @@ const server = http.createServer(app)
 const jwt = require('jsonwebtoken')
 const fs = require("fs")
 var openai = require("openai-node");
-openai.api_key = "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"; // required
+openai.api_key = "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"; // required
 // openai.organization = "YOUR ORGANIZATION ID"; // optional
 const {
   ADD_VISION,
