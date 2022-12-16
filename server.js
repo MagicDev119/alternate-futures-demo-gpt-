@@ -77,6 +77,18 @@ function getVersion2Prompt(username, inputtext, inputaudio) {
   return promptStr.slice(0, -3)
 }
 
+function getOpenaiPrompt(username, inputtext, inputaudio) {
+  const description = "Write a compelling, realistic story about a person named " + username + " who is an expert in " + inputtext + ". This story takes place in a not-so-distant future where " + username + " made critical contributions towards creating a world where " + inputaudio + ", and doing so made a massive, positive impact in helping humanity solve the climate crisis. Detail the contributions that only " + username + ", given his skillset, could have made to creating a world where " + inputaudio + "."
+
+  return description
+}
+
+function getOpenai2Prompt(username, userprofession, userhobbies, passions, gpt_output) {
+  const description = "Write a detailed, realistic, socio-politically, scientifically, and technologically validated step-by-step action plan (include a schedule, cost, and resource estimates along with instructions and suggestions for how to accomplish each step) for " + username + ", who is skilled in " + userprofession + " , " + userhobbies + ", and passionate about " + passions + " to actualize what this story describes: " + gpt_output
+
+  return description
+}
+
 io.on('connection', (socket) => {
   socket.socketTimer = setInterval(() => {
     if (socket.isProcessing) {
@@ -261,7 +273,7 @@ io.on('connection', (socket) => {
   socket.on('openai', (data) => {
     openai.Completion.create({
       model: "davinci",
-      prompt: "Original: She no went to the market.\nStandard American English:",
+      prompt: getOpenaiPrompt(data.username, data.inputtext, data.inputaudio),
       temperature: 1,
       max_tokens: 64,
       top_p: 1,
@@ -274,12 +286,69 @@ io.on('connection', (socket) => {
       best_of: 1,
       stop: null,
     }).then((response) => {
-      console.log(response);
-      socket.emit('openai', response)
+      let result = {
+        openai1: response
+      }
+      const gptOutput = (response.choices && response.choices[0]) ? response.choices[0].text : ''
+      openai.Completion.create({
+        model: "davinci",
+        prompt: getOpenai2Prompt(data.username, data.userprofession, data.userhobbies, data.passions, gptOutput),
+        temperature: 1,
+        max_tokens: 64,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 1,
+        n: 1,
+        stream: false,
+        logprobs: null,
+        echo: false,
+        best_of: 1,
+        stop: null,
+      }).then((response2) => {
+        result.openai2 = response2
+        socket.emit('openai', result)
+      })
     });
   })
 
+  socket.on('txt2image', async (data) => {
+    if (socket.isTxt2imageProcessing) return;
+    socket.isTxt2imageProcessing = true
+    let payload = {
+      "prompt": "a photo",
+      "token": "421d2c52166gg976513e47d65d3d4b57"
+    }
+    console.log(payload)
+    let res;
+    try {
+      res = await axios.post('http://54.176.111.251/api/txt2img/base64', payload)
+    } catch (e) {
+      console.log(e)
+    }
+    let base64 = res ? res.data : undefined
+    socket.isTxt2imageProcessing = false
+
+    console.log('Image generated')
+    if (base64) {
+      console.log('!!!!!!!!!!!!!!!!!!!!Image generated')
+      base64 = base64.replace(/^data:(.*?)base64,/, "")
+      base64 = base64.replace(/ /g, '+')
+      const curTime = (new Date()).getTime()
+      const fileName = './uploads/txt2img/' + curTime + '.png'
+      fs.writeFile(fileName, base64, 'base64', async function (err) {
+        if (err) {
+          return
+        }
+        socket.emit('txt2image', {
+          fileName
+        })
+      })
+    }
+  })
+
   socket.on('videogenerate', async (data) => {
+    if (socket.isVideoProcessing) return;
+    socket.isVideoProcessing = true
     let payload = {
       "max_frames": 200,
       "animation_prompts": getVersion2Prompt(data.username, data.inputtext, data.inputaudio),
@@ -292,8 +361,8 @@ io.on('connection', (socket) => {
       "fps": 10,
       "token": "421d2c52165bb776513e47d65d3d4b57"
     }
-    console.log(payload)
     let res = await axios.post('https://sdv.alternatefutures.com/api/txt2video_concurrent', payload)
+    socket.isVideoProcessing = false
     let base64 = res.data.base64
     console.log('generate finished')
     if (base64) {
