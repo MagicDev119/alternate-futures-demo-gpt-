@@ -394,6 +394,52 @@ io.on('connection', (socket) => {
     }
   })
 
+  socket.on('generatepdf', (data) => {
+    var html = fs.readFileSync("index.html", "utf8");
+
+    var options = {
+      format: "A3",
+      orientation: "portrait",
+      border: "10mm",
+      header: {
+        height: "10mm",
+        contents: '<div style="text-align: center; font-size: 18px;">ALTERNATE FUTURES</div>'
+      },
+      footer: {
+        height: "5mm",
+        contents: {
+          // first: 'Cover page',
+          // 2: 'Second page', // Any page number is working. 1-based index
+          default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+          // last: 'Last Page'
+        }
+      }
+    };
+    const currentTime = (new Date()).getTime()
+    var document = {
+      html: html,
+      data: {
+        imgUrl: data.imgUrl,
+        gpt1txt: data.gpt1txt,
+        gpt2txt: data.gpt2txt,
+        thumbImgUrl: data.thumbImgUrl
+      },
+      path: "./pdf/alternate_future_" + currentTime + ".pdf",
+      type: "",
+    };
+
+    pdf
+      .create(document, options)
+      .then((res) => {
+        socket.emit('generatePdf', {
+          url: "./pdf/alternate_future_" + currentTime + ".pdf"
+        })
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  })
+
   socket.on('disconnect', async function () {
 
     jwt.verify(socket.token, process.env.JWT_SECRET, async function (err, decoded) {
