@@ -419,7 +419,7 @@ io.on('connection', (socket) => {
 
     let logo;
     try {
-      const bitmap = fs.readFileSync(__dirname + './uploads/txt2img/1671391348589.png'.substr(1));
+      const bitmap = fs.readFileSync(__dirname + data.imgUrl.substr(1));
       logo = bitmap.toString('base64');
     } catch (e) {
       console.log(e)
@@ -427,7 +427,7 @@ io.on('connection', (socket) => {
 
     let thumbImageBase64;
     try {
-      const thumbImage = fs.readFileSync(__dirname + "./uploads/thumbnails/167139178w6790.png".substr(1));
+      const thumbImage = fs.readFileSync(__dirname + data.thumbImgUrl.substr(1));
       thumbImageBase64 = thumbImage.toString('base64');
     } catch (e) {
       console.log(e)
