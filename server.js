@@ -12,8 +12,9 @@ const axios = require('axios')
 const server = http.createServer(app)
 const jwt = require('jsonwebtoken')
 const fs = require("fs")
+var pdf = require("pdf-creator-node")
 var openai = require("openai-node");
-openai.api_key = "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"; // required
+openai.api_key = "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"; // required
 // openai.organization = "YOUR ORGANIZATION ID"; // optional
 const {
   ADD_VISION,
@@ -395,7 +396,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('generatepdf', (data) => {
-    var html = fs.readFileSync("index.html", "utf8");
+    var html = fs.readFileSync("./template/index.html", "utf8");
 
     var options = {
       format: "A3",
@@ -415,24 +416,35 @@ io.on('connection', (socket) => {
         }
       }
     };
+
+    const bitmap = fs.readFileSync(__dirname + data.imgUrl.substr(1));
+    const logo = bitmap.toString('base64');
+
+    const thumbImage = fs.readFileSync(__dirname + data.thumbImgUrl.substr(1));
+    const thumbImageBase64 = thumbImage.toString('base64');
+
     const currentTime = (new Date()).getTime()
     var document = {
       html: html,
       data: {
-        imgUrl: data.imgUrl,
+        imgUrl: 'data:image/png;base64,' + logo,
         gpt1txt: data.gpt1txt,
         gpt2txt: data.gpt2txt,
-        thumbImgUrl: data.thumbImgUrl
+        thumbImgUrl: 'data:image/png;base64,' + thumbImageBase64,
+        user_passionate: data.passions,
+        user_hobbies: data.hobbies,
+        user_profession: data.profession,
+        username: data.name
       },
-      path: "./pdf/alternate_future_" + currentTime + ".pdf",
+      path: "./uploads/pdf/alternate_future_" + currentTime + ".pdf",
       type: "",
     };
-
+    console.log(document)
     pdf
       .create(document, options)
       .then((res) => {
         socket.emit('generatePdf', {
-          url: "./pdf/alternate_future_" + currentTime + ".pdf"
+          url: "./uploads/pdf/alternate_future_" + currentTime + ".pdf"
         })
       })
       .catch((error) => {
