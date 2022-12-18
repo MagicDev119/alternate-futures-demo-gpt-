@@ -437,10 +437,10 @@ io.on('connection', (socket) => {
     var document = {
       html: html,
       data: {
-        imgUrl: 'data:image/png;base64,' + logo ? logo : '',
+        imgUrl: 'https://43.206.213.27' + data.imgUrl,
         gpt1txt: data.gpt1txt,
         gpt2txt: data.gpt2txt,
-        thumbImgUrl: 'data:image/png;base64,' + thumbImageBase64 ? thumbImageBase64 : '',
+        thumbImgUrl: 'https://43.206.213.27' + data.thumbImgUrl,
         user_passionate: data.passions,
         user_hobbies: data.hobbies,
         user_profession: data.profession,
