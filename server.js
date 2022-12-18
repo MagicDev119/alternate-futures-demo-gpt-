@@ -417,20 +417,30 @@ io.on('connection', (socket) => {
       }
     };
 
-    const bitmap = fs.readFileSync(__dirname + data.imgUrl.substr(1));
-    const logo = bitmap.toString('base64');
+    let logo;
+    try {
+      const bitmap = fs.readFileSync(__dirname + './uploads/txt2img/1671391348589.png'.substr(1));
+      logo = bitmap.toString('base64');
+    } catch (e) {
+      console.log(e)
+    }
 
-    const thumbImage = fs.readFileSync(__dirname + data.thumbImgUrl.substr(1));
-    const thumbImageBase64 = thumbImage.toString('base64');
+    let thumbImageBase64;
+    try {
+      const thumbImage = fs.readFileSync(__dirname + "./uploads/thumbnails/167139178w6790.png".substr(1));
+      thumbImageBase64 = thumbImage.toString('base64');
+    } catch (e) {
+      console.log(e)
+    }
 
     const currentTime = (new Date()).getTime()
     var document = {
       html: html,
       data: {
-        imgUrl: 'data:image/png;base64,' + logo,
+        imgUrl: 'data:image/png;base64,' + logo ? logo : '',
         gpt1txt: data.gpt1txt,
         gpt2txt: data.gpt2txt,
-        thumbImgUrl: 'data:image/png;base64,' + thumbImageBase64,
+        thumbImgUrl: 'data:image/png;base64,' + thumbImageBase64 ? thumbImageBase64 : '',
         user_passionate: data.passions,
         user_hobbies: data.hobbies,
         user_profession: data.profession,
@@ -439,7 +449,6 @@ io.on('connection', (socket) => {
       path: "./uploads/pdf/alternate_future_" + currentTime + ".pdf",
       type: "",
     };
-    console.log(document)
     pdf
       .create(document, options)
       .then((res) => {
