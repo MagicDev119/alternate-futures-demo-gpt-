@@ -417,22 +417,6 @@ io.on('connection', (socket) => {
       }
     };
 
-    let logo;
-    try {
-      const bitmap = fs.readFileSync(__dirname + data.imgUrl.substr(1));
-      logo = bitmap.toString('base64');
-    } catch (e) {
-      console.log(e)
-    }
-
-    let thumbImageBase64;
-    try {
-      const thumbImage = fs.readFileSync(__dirname + data.thumbImgUrl.substr(1));
-      thumbImageBase64 = thumbImage.toString('base64');
-    } catch (e) {
-      console.log(e)
-    }
-
     const currentTime = (new Date()).getTime()
     var document = {
       html: html,
@@ -449,6 +433,7 @@ io.on('connection', (socket) => {
       path: "./uploads/pdf/alternate_future_" + currentTime + ".pdf",
       type: "",
     };
+    console.log(document)
     pdf
       .create(document, options)
       .then((res) => {
