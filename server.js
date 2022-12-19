@@ -421,10 +421,10 @@ io.on('connection', (socket) => {
     var document = {
       html: html,
       data: {
-        imgUrl: 'https://43.206.213.27' + data.imgUrl.slice(1),
+        imgUrl: 'http://43.206.213.27' + data.imgUrl.slice(1),
         gpt1txt: data.gpt1txt,
         gpt2txt: data.gpt2txt,
-        thumbImgUrl: 'https://43.206.213.27' + data.thumbImgUrl.slice(1),
+        thumbImgUrl: 'http://43.206.213.27' + data.thumbImgUrl.slice(1),
         user_passionate: data.passions,
         user_hobbies: data.hobbies,
         user_profession: data.profession,
