@@ -285,7 +285,7 @@ io.on('connection', (socket) => {
     const jsonData = fs.readFileSync('./constants.json')
     const constants = JSON.parse(jsonData)
     openai.api_key = constants.gpt_key;
-
+    console.log(constants)
     openai.Completion.create({
       model: "davinci",
       prompt: getOpenaiPrompt(openai.gpt_prompt_1, data.username, data.inputtext, data.inputaudio),
