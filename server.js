@@ -78,14 +78,24 @@ function getVersion2Prompt(username, inputtext, inputaudio) {
   return promptStr.slice(0, -3)
 }
 
-function getOpenaiPrompt(username, inputtext, inputaudio) {
-  const description = "Write a compelling, realistic story about a person named " + username + " who is an expert in " + inputtext + ". This story takes place in a not-so-distant future where " + username + " made critical contributions towards creating a world where " + inputaudio + ", and doing so made a massive, positive impact in helping humanity solve the climate crisis. Detail the contributions that only " + username + ", given his skillset, could have made to creating a world where " + inputaudio + "."
+function getOpenaiPrompt(prompt_text, username, inputtext, inputaudio) {
+  // const description = "Write a compelling, realistic story about a person named " + username + " who is an expert in " + inputtext + ". This story takes place in a not-so-distant future where " + username + " made critical contributions towards creating a world where " + inputaudio + ", and doing so made a massive, positive impact in helping humanity solve the climate crisis. Detail the contributions that only " + username + ", given his skillset, could have made to creating a world where " + inputaudio + "."
+
+  let description = prompt_text.replace(/\<USER_INFO\>/gi, inputtext)
+  description = prompt_text.replace(/\<USER_NAME\>/gi, username)
+  description = prompt_text.replace(/\<VOICE_INPUT\>/gi, inputaudio)
 
   return description
 }
 
-function getOpenai2Prompt(username, userprofession, userhobbies, passions, gpt_output) {
-  const description = "Write a detailed, realistic, socio-politically, scientifically, and technologically validated step-by-step action plan (include a schedule, cost, and resource estimates along with instructions and suggestions for how to accomplish each step) for " + username + ", who is skilled in " + userprofession + " , " + userhobbies + ", and passionate about " + passions + " to actualize what this story describes: " + gpt_output
+function getOpenai2Prompt(prompt_text, username, userprofession, userhobbies, passions, gpt_output) {
+  // const description = "Write a detailed, realistic, socio-politically, scientifically, and technologically validated step-by-step action plan (include a schedule, cost, and resource estimates along with instructions and suggestions for how to accomplish each step) for " + username + ", who is skilled in " + userprofession + " , " + userhobbies + ", and passionate about " + passions + " to actualize what this story describes: " + gpt_output
+
+  let description = prompt_text.replace(/\<USER_NAME\>/gi, username)
+  description = prompt_text.replace(/\<USER_PROFESSION\>/gi, userprofession)
+  description = prompt_text.replace(/\<USER_HOBBIES\>/gi, userhobbies)
+  description = prompt_text.replace(/\<USER_PASSIONS\>/gi, passions)
+  description = prompt_text.replace(/\<GPT3_OUTPUT_1\>/gi, gpt_output)
 
   return description
 }
@@ -272,9 +282,13 @@ io.on('connection', (socket) => {
   })
 
   socket.on('openai', (data) => {
+    const jsonData = fs.readFileSync('./constants.json')
+    const constants = JSON.parse(jsonData)
+    openai.api_key = constants.gpt_key;
+
     openai.Completion.create({
       model: "davinci",
-      prompt: getOpenaiPrompt(data.username, data.inputtext, data.inputaudio),
+      prompt: getOpenaiPrompt(openai.gpt_prompt_1, data.username, data.inputtext, data.inputaudio),
       temperature: 1,
       max_tokens: 64,
       top_p: 1,
@@ -293,7 +307,7 @@ io.on('connection', (socket) => {
       const gptOutput = (response.choices && response.choices[0]) ? response.choices[0].text : ''
       openai.Completion.create({
         model: "davinci",
-        prompt: getOpenai2Prompt(data.username, data.userprofession, data.userhobbies, data.passions, gptOutput),
+        prompt: getOpenai2Prompt(openai.gpt_prompt_2, data.username, data.userprofession, data.userhobbies, data.passions, gptOutput),
         temperature: 1,
         max_tokens: 64,
         top_p: 1,
