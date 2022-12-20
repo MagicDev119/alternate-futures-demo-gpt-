@@ -288,7 +288,7 @@ io.on('connection', (socket) => {
     console.log(constants)
     openai.Completion.create({
       model: "davinci",
-      prompt: getOpenaiPrompt(openai.gpt_prompt_1, data.username, data.inputtext, data.inputaudio),
+      prompt: getOpenaiPrompt(constants.gpt_prompt_1, data.username, data.inputtext, data.inputaudio),
       temperature: 1,
       max_tokens: 64,
       top_p: 1,
@@ -307,7 +307,7 @@ io.on('connection', (socket) => {
       const gptOutput = (response.choices && response.choices[0]) ? response.choices[0].text : ''
       openai.Completion.create({
         model: "davinci",
-        prompt: getOpenai2Prompt(openai.gpt_prompt_2, data.username, data.userprofession, data.userhobbies, data.passions, gptOutput),
+        prompt: getOpenai2Prompt(constants.gpt_prompt_2, data.username, data.userprofession, data.userhobbies, data.passions, gptOutput),
         temperature: 1,
         max_tokens: 64,
         top_p: 1,
