@@ -82,8 +82,8 @@ function getOpenaiPrompt(prompt_text, username, inputtext, inputaudio) {
   // const description = "Write a compelling, realistic story about a person named " + username + " who is an expert in " + inputtext + ". This story takes place in a not-so-distant future where " + username + " made critical contributions towards creating a world where " + inputaudio + ", and doing so made a massive, positive impact in helping humanity solve the climate crisis. Detail the contributions that only " + username + ", given his skillset, could have made to creating a world where " + inputaudio + "."
 
   let description = prompt_text.replace(/\<USER_INFO\>/gi, inputtext)
-  description = prompt_text.replace(/\<USER_NAME\>/gi, username)
-  description = prompt_text.replace(/\<VOICE_INPUT\>/gi, inputaudio)
+  description = description.replace(/\<USER_NAME\>/gi, username)
+  description = description.replace(/\<VOICE_INPUT\>/gi, inputaudio)
 
   return description
 }
@@ -92,10 +92,10 @@ function getOpenai2Prompt(prompt_text, username, userprofession, userhobbies, pa
   // const description = "Write a detailed, realistic, socio-politically, scientifically, and technologically validated step-by-step action plan (include a schedule, cost, and resource estimates along with instructions and suggestions for how to accomplish each step) for " + username + ", who is skilled in " + userprofession + " , " + userhobbies + ", and passionate about " + passions + " to actualize what this story describes: " + gpt_output
 
   let description = prompt_text.replace(/\<USER_NAME\>/gi, username)
-  description = prompt_text.replace(/\<USER_PROFESSION\>/gi, userprofession)
-  description = prompt_text.replace(/\<USER_HOBBIES\>/gi, userhobbies)
-  description = prompt_text.replace(/\<USER_PASSIONS\>/gi, passions)
-  description = prompt_text.replace(/\<GPT3_OUTPUT_1\>/gi, gpt_output)
+  description = description.replace(/\<USER_PROFESSION\>/gi, userprofession)
+  description = description.replace(/\<USER_HOBBIES\>/gi, userhobbies)
+  description = description.replace(/\<USER_PASSIONS\>/gi, passions)
+  description = description.replace(/\<GPT3_OUTPUT_1\>/gi, gpt_output)
 
   return description
 }
