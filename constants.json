@@ -1,5 +1,5 @@
 {
-  "gpt_key": "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",
+  "gpt_key": "",
   "gpt_prompt_1": "Write a compelling, realistic story about a person named <USER_NAME> who is an expert in <USER_INFO>. This story takes place in a not-so-distant future where <USER_NAME> made critical contributions towards creating a world where <VOICE_INPUT>, and doing so made a massive, positive impact in helping humanity solve the climate crisis. Detail the contributions that only <USER_NAME>, given his skillset, could have made to creating a world where <VOICE_INPUT>.",
   "gpt_prompt_2": "Write a detailed, realistic, socio-politically, scientifically, and technologically validated step-by-step action plan (include a schedule, cost, and resource estimates along with instructions and suggestions for how to accomplish each step) for <USER_NAME>, who is skilled in <USER_PROFESSION> , <USER_HOBBIES>, and passionate about <USER_PASSIONS> to actualize what this story describes: <GPT3_OUTPUT_1>"
 }
