@@ -84,7 +84,7 @@ function getOpenaiPrompt(prompt_text, username, inputtext, inputaudio) {
   let description = prompt_text.replace(/\<USER_INFO\>/gi, inputtext)
   description = description.replace(/\<USER_NAME\>/gi, username)
   description = description.replace(/\<VOICE_INPUT\>/gi, inputaudio)
-
+  console.log(description)
   return description
 }
 
@@ -96,6 +96,7 @@ function getOpenai2Prompt(prompt_text, username, userprofession, userhobbies, pa
   description = description.replace(/\<USER_HOBBIES\>/gi, userhobbies)
   description = description.replace(/\<USER_PASSIONS\>/gi, passions)
   description = description.replace(/\<GPT3_OUTPUT_1\>/gi, gpt_output)
+  console.log(description)
 
   return description
 }
