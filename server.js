@@ -69,7 +69,8 @@ function getVersion2Prompt(username, inputtext, inputaudio) {
   const frames = [0, 50, 100, 150, 200]
   let promptStr = ""
 
-  const description = "Write a compelling, realistic story about a person named " + username + " who is an expert in " + inputtext + ". This story takes place in a not-so-distant future where " + username + " made critical contributions towards creating a world where " + inputaudio + ", and doing so made a massive, positive impact in helping humanity solve the climate crisis. Detail the contributions that only " + username + ", given his skillset, could have made to creating a world where " + inputaudio + "."
+  // const description = "Write a compelling, realistic story about a person named " + username + " who is an expert in " + inputtext + ". This story takes place in a not-so-distant future where " + username + " made critical contributions towards creating a world where " + inputaudio + ", and doing so made a massive, positive impact in helping humanity solve the climate crisis. Detail the contributions that only " + username + ", given his skillset, could have made to creating a world where " + inputaudio + "."
+  const description = inputaudio;
 
   frames.map(each => {
     promptStr += each + ": " + description + " | "
@@ -331,7 +332,7 @@ io.on('connection', (socket) => {
     if (socket.isTxt2imageProcessing) return;
     socket.isTxt2imageProcessing = true
     let payload = {
-      "prompt": "a photo",
+      "prompt": data.inputaudio,
       "token": "421d2c52166gg976513e47d65d3d4b57"
     }
     console.log(payload)
@@ -377,6 +378,7 @@ io.on('connection', (socket) => {
       "fps": 10,
       "token": "421d2c52165bb776513e47d65d3d4b57"
     }
+    console.log(payload)
     let res = await axios.post('https://sdv.alternatefutures.com/api/txt2video_concurrent', payload)
     socket.isVideoProcessing = false
     let base64 = res.data.base64
