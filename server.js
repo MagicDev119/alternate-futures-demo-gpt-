@@ -289,38 +289,38 @@ io.on('connection', (socket) => {
     openai.api_key = constants.gpt_key;
     console.log(constants)
     openai.Completion.create({
-      model: "davinci",
+      model: "text-davinci-002",
       prompt: getOpenaiPrompt(constants.gpt_prompt_1, data.username, data.inputtext, data.inputaudio),
-      temperature: 1,
-      max_tokens: 64,
+      temperature: 0.84,
+      max_tokens: 256,
       top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 1,
-      n: 1,
-      stream: false,
-      logprobs: null,
-      echo: false,
-      best_of: 1,
-      stop: null,
+      frequency_penalty: 2,
+      presence_penalty: 2,
+      // n: 1,
+      // stream: false,
+      // logprobs: null,
+      // echo: false,
+      best_of: 4,
+      // stop: null,
     }).then((response) => {
       let result = {
         openai1: response
       }
       const gptOutput = (response.choices && response.choices[0]) ? response.choices[0].text : ''
       openai.Completion.create({
-        model: "davinci",
+        model: "text-davinci-002",
         prompt: getOpenai2Prompt(constants.gpt_prompt_2, data.username, data.userprofession, data.userhobbies, data.passions, gptOutput),
-        temperature: 1,
-        max_tokens: 64,
+        temperature: 0.84,
+        max_tokens: 256,
         top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 1,
-        n: 1,
-        stream: false,
-        logprobs: null,
-        echo: false,
-        best_of: 1,
-        stop: null,
+        frequency_penalty: 2,
+        presence_penalty: 2,
+        // n: 1,
+        // stream: false,
+        // logprobs: null,
+        // echo: false,
+        best_of: 4,
+        // stop: null,
       }).then((response2) => {
         result.openai2 = response2
         socket.emit('openai', result)
