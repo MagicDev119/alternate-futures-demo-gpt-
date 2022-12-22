@@ -331,8 +331,10 @@ io.on('connection', (socket) => {
   socket.on('txt2image', async (data) => {
     if (socket.isTxt2imageProcessing) return;
     socket.isTxt2imageProcessing = true
+    let txtPrompt = constants.txt2img_prompt;
+    txtPrompt = txtPrompt.replace(/\<VOICE_INPUT\>/gi, data.inputaudio)
     let payload = {
-      "prompt": data.inputaudio,
+      "prompt": txtPrompt,
       "token": "421d2c52166gg976513e47d65d3d4b57"
     }
     console.log(payload)
@@ -366,9 +368,11 @@ io.on('connection', (socket) => {
   socket.on('videogenerate', async (data) => {
     if (socket.isVideoProcessing) return;
     socket.isVideoProcessing = true
+    let videoPrompt = constants.video_prompt;
+    videoPrompt = videoPrompt.replace(/\<VOICE_INPUT\>/gi, data.inputaudio)
     let payload = {
       "max_frames": 200,
-      "animation_prompts": getVersion2Prompt(data.username, data.inputtext, data.inputaudio),
+      "animation_prompts": videoPrompt,
       "angle": "0:(0)",
       "zoom": "0: (1.04)",
       "translation_x": "0: (0)",
@@ -445,7 +449,8 @@ io.on('connection', (socket) => {
         user_passionate: data.passions,
         user_hobbies: data.hobbies,
         user_profession: data.profession,
-        username: data.name
+        username: data.name,
+        inputaudio: data.inputaudio
       },
       path: "./uploads/pdf/alternate_future_" + currentTime + ".pdf",
       type: "",
