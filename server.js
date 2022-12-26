@@ -288,12 +288,12 @@ io.on('connection', (socket) => {
     const jsonData = fs.readFileSync('./constants.json')
     const constants = JSON.parse(jsonData)
     openai.api_key = constants.gpt_key;
+    const gpt_txt_1 = getOpenaiPrompt(constants.gpt_1_payload.prompt, data.username, data.inputtext, data.inputaudio);
     console.log({
       ...constants.gpt_1_payload,
       "prompt": gpt_txt_1
 
     })
-    const gpt_txt_1 = getOpenaiPrompt(constants.gpt_1_payload.prompt, data.username, data.inputtext, data.inputaudio);
     openai.Completion.create({
       ...constants.gpt_1_payload,
       "prompt": gpt_txt_1
