@@ -288,7 +288,11 @@ io.on('connection', (socket) => {
     const jsonData = fs.readFileSync('./constants.json')
     const constants = JSON.parse(jsonData)
     openai.api_key = constants.gpt_key;
-    console.log(constants)
+    console.log({
+      ...constants.gpt_1_payload,
+      "prompt": gpt_txt_1
+
+    })
     const gpt_txt_1 = getOpenaiPrompt(constants.gpt_1_payload.prompt, data.username, data.inputtext, data.inputaudio);
     openai.Completion.create({
       ...constants.gpt_1_payload,
@@ -301,6 +305,11 @@ io.on('connection', (socket) => {
       const gptOutput = (response.choices && response.choices[0]) ? response.choices[0].text : ''
       const gpt_txt_2 = getOpenai2Prompt(constants.gpt_2_payload.prompt, data.username, data.userprofession, data.userhobbies, data.passions, gptOutput);
 
+      console.log({
+        ...constants.gpt_1_payload,
+        "prompt": gpt_txt_2
+
+      })
       openai.Completion.create({
         ...constants.gpt_1_payload,
         "prompt": gpt_txt_2
@@ -311,7 +320,6 @@ io.on('connection', (socket) => {
       })
     });
   })
-
   socket.on('txt2image', async (data) => {
     if (socket.isTxt2imageProcessing) return;
     socket.isTxt2imageProcessing = true
