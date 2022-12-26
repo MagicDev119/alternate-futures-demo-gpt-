@@ -325,6 +325,8 @@ io.on('connection', (socket) => {
   socket.on('txt2image', async (data) => {
     if (socket.isTxt2imageProcessing) return;
     socket.isTxt2imageProcessing = true
+    const jsonData = fs.readFileSync('./constants.json')
+    const constants = JSON.parse(jsonData)
     console.log('----------text---------')
     let txtPrompt = constants.txt2img_payload.prompt;
     txtPrompt = txtPrompt.replace(/\<VOICE_INPUT\>/gi, data.inputaudio)
@@ -363,10 +365,9 @@ io.on('connection', (socket) => {
   socket.on('videogenerate', async (data) => {
     if (socket.isVideoProcessing) return;
     socket.isVideoProcessing = true
+    const jsonData = fs.readFileSync('./constants.json')
+    const constants = JSON.parse(jsonData)
     console.log('----------videogenerate---------')
-    console.log(constants.video_payload)
-    console.log('----------videogenerate---------')
-    console.log(constants.video_payload.animation_prompts)
 
     let videoPrompt = constants.video_payload.animation_prompts;
     videoPrompt = videoPrompt.replace(/\<VOICE_INPUT\>/gi, data.inputaudio)
