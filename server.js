@@ -21,6 +21,7 @@ const {
   GET_VISION_STATUS,
   SAVE_VISOINDATA
 } = require('./actions/socketio')
+const { constants } = require("buffer")
 
 app.use(cors())
 app.use(express.json())
@@ -288,39 +289,22 @@ io.on('connection', (socket) => {
     const constants = JSON.parse(jsonData)
     openai.api_key = constants.gpt_key;
     console.log(constants)
+    const gpt_txt_1 = getOpenaiPrompt(constants.gpt_1_payload.prompt, data.username, data.inputtext, data.inputaudio);
     openai.Completion.create({
-      model: "text-davinci-002",
-      prompt: getOpenaiPrompt(constants.gpt_prompt_1, data.username, data.inputtext, data.inputaudio),
-      temperature: 0.84,
-      max_tokens: 256,
-      top_p: 1,
-      frequency_penalty: 2,
-      presence_penalty: 2,
-      // n: 1,
-      // stream: false,
-      // logprobs: null,
-      // echo: false,
-      best_of: 4,
-      // stop: null,
+      ...constants.gpt_1_payload,
+      "prompt": gpt_txt_1
+
     }).then((response) => {
       let result = {
         openai1: response
       }
       const gptOutput = (response.choices && response.choices[0]) ? response.choices[0].text : ''
+      const gpt_txt_2 = getOpenai2Prompt(constants.gpt_2_payload.prompt, data.username, data.userprofession, data.userhobbies, data.passions, gptOutput);
+
       openai.Completion.create({
-        model: "text-davinci-002",
-        prompt: getOpenai2Prompt(constants.gpt_prompt_2, data.username, data.userprofession, data.userhobbies, data.passions, gptOutput),
-        temperature: 0.84,
-        max_tokens: 256,
-        top_p: 1,
-        frequency_penalty: 2,
-        presence_penalty: 2,
-        // n: 1,
-        // stream: false,
-        // logprobs: null,
-        // echo: false,
-        best_of: 4,
-        // stop: null,
+        ...constants.gpt_1_payload,
+        "prompt": gpt_txt_2
+
       }).then((response2) => {
         result.openai2 = response2
         socket.emit('openai', result)
@@ -331,11 +315,11 @@ io.on('connection', (socket) => {
   socket.on('txt2image', async (data) => {
     if (socket.isTxt2imageProcessing) return;
     socket.isTxt2imageProcessing = true
-    let txtPrompt = constants.txt2img_prompt;
+    let txtPrompt = constants.txt2img_payload.prompt;
     txtPrompt = txtPrompt.replace(/\<VOICE_INPUT\>/gi, data.inputaudio)
     let payload = {
-      "prompt": txtPrompt,
-      "token": "421d2c52166gg976513e47d65d3d4b57"
+      ...constants.txt2img_payload,
+      "prompt": txtPrompt
     }
     console.log(payload)
     let res;
@@ -368,20 +352,13 @@ io.on('connection', (socket) => {
   socket.on('videogenerate', async (data) => {
     if (socket.isVideoProcessing) return;
     socket.isVideoProcessing = true
-    let videoPrompt = constants.video_prompt;
+    let videoPrompt = constants.video_payload.animation_prompts;
     videoPrompt = videoPrompt.replace(/\<VOICE_INPUT\>/gi, data.inputaudio)
     let payload = {
-      "max_frames": 200,
-      "animation_prompts": videoPrompt,
-      "angle": "0:(0)",
-      "zoom": "0: (1.04)",
-      "translation_x": "0: (0)",
-      "translation_y": "0: (0)",
-      "color_coherence": "Match Frame 0 LAB",
-      "sampler": "plms",
-      "fps": 10,
-      "token": "421d2c52165bb776513e47d65d3d4b57"
+      ...constants.video_payload,
+      "animation_prompts": videoPrompt
     }
+
     console.log(payload)
     let res = await axios.post('https://sdv.alternatefutures.com/api/txt2video_concurrent', payload)
     socket.isVideoProcessing = false

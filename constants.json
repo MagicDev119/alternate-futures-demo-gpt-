@@ -1,5 +1,39 @@
 {
   "gpt_key": "",
-  "gpt_prompt_1": "Write a compelling, realistic story about a person named <USER_NAME> who is an expert in <USER_INFO>. This story takes place in a not-so-distant future where <USER_NAME> made critical contributions towards creating a world where <VOICE_INPUT>, and doing so made a massive, positive impact in helping humanity solve the climate crisis. Detail the contributions that only <USER_NAME>, given his skillset, could have made to creating a world where <VOICE_INPUT>.",
-  "gpt_prompt_2": "Write a detailed, realistic, socio-politically, scientifically, and technologically validated step-by-step action plan (include a schedule, cost, and resource estimates along with instructions and suggestions for how to accomplish each step) for <USER_NAME>, who is skilled in <USER_PROFESSION> , <USER_HOBBIES>, and passionate about <USER_PASSIONS> to actualize what this story describes: <GPT3_OUTPUT_1>"
+  "gpt_1_payload": {
+    "model": "text-davinci-002",
+    "prompt": "Write a compelling, realistic story about a person named <USER_NAME> who is an expert in <USER_INFO>. This story takes place in a not-so-distant future where <USER_NAME> made critical contributions towards creating a world where <VOICE_INPUT>, and doing so made a massive, positive impact in helping humanity solve the climate crisis. Detail the contributions that only <USER_NAME>, given his skillset, could have made to creating a world where <VOICE_INPUT>.",
+    "temperature": 0.84,
+    "max_tokens": 256,
+    "top_p": 1,
+    "frequency_penalty": 2,
+    "presence_penalty": 2,
+    "best_of": 4
+  },
+  "gpt_2_payload": {
+      "model": "text-davinci-002",
+      "prompt": "Write a detailed, realistic, socio-politically, scientifically, and technologically validated step-by-step action plan (include a schedule, cost, and resource estimates along with instructions and suggestions for how to accomplish each step) for <USER_NAME>, who is skilled in <USER_PROFESSION> , <USER_HOBBIES>, and passionate about <USER_PASSIONS> to actualize what this story describes: <GPT3_OUTPUT_1>",
+      "temperature": 0.84,
+      "max_tokens": 256,
+      "top_p": 1,
+      "frequency_penalty": 2,
+      "presence_penalty": 2,
+      "best_of": 4
+    },
+  "txt2img_payload": {
+      "prompt": "<VOICE_INPUT>",
+      "token": "421d2c52166gg976513e47d65d3d4b57"
+    },
+  "video_payload": {
+    "max_frames": 200,
+    "animation_prompts": "0: <VOICE_INPUT>",
+    "angle": "0:(0)",
+    "zoom": "0: (1.04)",
+    "translation_x": "0: (0)",
+    "translation_y": "0: (0)",
+    "color_coherence": "Match Frame 0 LAB",
+    "sampler": "plms",
+    "fps": 10,
+    "token": "421d2c52165bb776513e47d65d3d4b57"
+  }
 }
