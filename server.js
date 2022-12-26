@@ -286,6 +286,7 @@ io.on('connection', (socket) => {
 
   socket.on('openai', (data) => {
     const jsonData = fs.readFileSync('./constants.json')
+    console.log('----------openai---------')
     const constants = JSON.parse(jsonData)
     openai.api_key = constants.gpt_key;
     const gpt_txt_1 = getOpenaiPrompt(constants.gpt_1_payload.prompt, data.username, data.inputtext, data.inputaudio);
@@ -302,6 +303,7 @@ io.on('connection', (socket) => {
       let result = {
         openai1: response
       }
+      console.log('----------open-ai-2---------')
       const gptOutput = (response.choices && response.choices[0]) ? response.choices[0].text : ''
       const gpt_txt_2 = getOpenai2Prompt(constants.gpt_2_payload.prompt, data.username, data.userprofession, data.userhobbies, data.passions, gptOutput);
 
@@ -323,6 +325,7 @@ io.on('connection', (socket) => {
   socket.on('txt2image', async (data) => {
     if (socket.isTxt2imageProcessing) return;
     socket.isTxt2imageProcessing = true
+    console.log('----------text---------')
     let txtPrompt = constants.txt2img_payload.prompt;
     txtPrompt = txtPrompt.replace(/\<VOICE_INPUT\>/gi, data.inputaudio)
     let payload = {
@@ -360,6 +363,11 @@ io.on('connection', (socket) => {
   socket.on('videogenerate', async (data) => {
     if (socket.isVideoProcessing) return;
     socket.isVideoProcessing = true
+    console.log('----------videogenerate---------')
+    console.log(constants.video_payload)
+    console.log('----------videogenerate---------')
+    console.log(constants.video_payload.animation_prompts)
+
     let videoPrompt = constants.video_payload.animation_prompts;
     videoPrompt = videoPrompt.replace(/\<VOICE_INPUT\>/gi, data.inputaudio)
     let payload = {
